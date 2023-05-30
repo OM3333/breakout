@@ -6,25 +6,34 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class GameCanvas extends Canvas {
     private GraphicsContext graphicsContext;
     private Paddle paddle;
     private Ball ball;
     private boolean gameRunning = false;
 
+    private List<CollisionLine> collisionLineList;
+
     private boolean shouldBallBounceHorizontally(double diff){
         Point2D point2D = ball.newPosition(diff);
-        double xDiff = point2D.getX()-ball.x;
-        double yDiff = point2D.getY()-ball.y;
-
-        if(this.widthProperty().get() < ball.x+ball.width || ball.x-ball.width < 0){
-            return true;
+        CollisionLine pathCollisionLine = new CollisionLine(new Point2D(ball.x,ball.y),point2D);
+        for(CollisionLine collisionLine : collisionLineList){
+            if(pathCollisionLine.collision(collisionLine)){
+                return true;
+            }
         }
         return false;
     }
     private boolean shouldBallBounceVertically(double diff){
-        if(this.heightProperty().get() < ball.y+ball.height || ball.y-ball.height < 0){
-            return true;
+        Point2D point2D = ball.newPosition(diff);
+        CollisionLine pathCollisionLine = new CollisionLine(new Point2D(ball.x,ball.y),point2D);
+        for(CollisionLine collisionLine : collisionLineList){
+            if(pathCollisionLine.collision(collisionLine)){
+                return true;
+            }
         }
         return false;
     }
@@ -60,6 +69,12 @@ public class GameCanvas extends Canvas {
         public void start() {
             super.start();
             lastUpdate = System.nanoTime();
+            collisionLineList = List.of(
+                    new CollisionLine(0,0,getWidth(),0),
+                    new CollisionLine(getWidth(),0,getWidth(),getHeight()),
+                    new CollisionLine(getWidth(),getHeight(),0,getHeight()),
+                    new CollisionLine(0,getHeight(),0,0)
+            );
         }
     };
 

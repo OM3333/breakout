@@ -1,7 +1,9 @@
 package pl.umcs.oop.breakout;
 
+import javafx.geometry.Point2D;
+
 public class CollisionLine {
-    public final double startX, startY, endX, endY;
+    public double startX, startY, endX, endY;
 
 
     public CollisionLine(double startX, double startY, double endX, double endY) {
@@ -19,6 +21,21 @@ public class CollisionLine {
         this.startY = resultStartY;
         this.endX = resultEndX;
         this.endY = resultEndY;
+    }
+
+    public CollisionLine(Point2D start, Point2D end){
+        if(start.getX()>end.getX()){
+            startX = end.getX();
+            startY = end.getY();
+            endX = start.getX();
+            endY = start.getY();
+        }
+        else{
+            startX = start.getX();
+            startY = start.getY();
+            endX = end.getX();
+            endY = end.getY();
+        }
     }
 
     public boolean collision(CollisionLine otherLine){
