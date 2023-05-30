@@ -6,7 +6,7 @@ import javafx.scene.paint.Color;
 
 public class Ball extends GraphicsItem {
     private Point2D moveVector = new Point2D(1, -1).normalize();
-    private double velocity = 500;
+    private double velocity = 50;
 
     public Ball() {
         x = -100;

@@ -41,7 +41,7 @@ public class CollisionLine {
     public boolean collision(CollisionLine otherLine){
         double t = ((this.startX-otherLine.startX)*(otherLine.startY- otherLine.endY)-(this.startY- otherLine.startY)*(otherLine.startX- otherLine.endX))/((this.startX-this.endX)*(otherLine.startY-otherLine.endY)-(this.startY-this.endY)*(this.startY-this.endY)*(otherLine.startX-otherLine.endX));
         double u = ((this.startX-this.endX)*(this.startY-this.endY)-(this.startY- otherLine.startY)*(this.startX-this.endX))/((this.startX-this.endX)*(otherLine.startY-otherLine.endY)-(this.startY-this.endY)*(otherLine.startX-otherLine.endX));
-        if(0<=t && t >= 1 && 0 <= u && u >=1){
+        if(0<=t && t <= 1 && 0 <= u && u <=1){
             return true;
         }
         return false;

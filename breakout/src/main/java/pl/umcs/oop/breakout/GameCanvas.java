@@ -15,12 +15,14 @@ public class GameCanvas extends Canvas {
     private Ball ball;
     private boolean gameRunning = false;
 
-    private List<CollisionLine> collisionLineList;
+    private List<CollisionLine> collisionLineHorizontal;
+
+    private List<CollisionLine> collisionlineVertical;
 
     private boolean shouldBallBounceHorizontally(double diff){
         Point2D point2D = ball.newPosition(diff);
         CollisionLine pathCollisionLine = new CollisionLine(new Point2D(ball.x,ball.y),point2D);
-        for(CollisionLine collisionLine : collisionLineList){
+        for(CollisionLine collisionLine : collisionLineHorizontal){
             if(pathCollisionLine.collision(collisionLine)){
                 return true;
             }
@@ -30,7 +32,7 @@ public class GameCanvas extends Canvas {
     private boolean shouldBallBounceVertically(double diff){
         Point2D point2D = ball.newPosition(diff);
         CollisionLine pathCollisionLine = new CollisionLine(new Point2D(ball.x,ball.y),point2D);
-        for(CollisionLine collisionLine : collisionLineList){
+        for(CollisionLine collisionLine : collisionlineVertical){
             if(pathCollisionLine.collision(collisionLine)){
                 return true;
             }
@@ -61,7 +63,9 @@ public class GameCanvas extends Canvas {
             else if(shouldBallBounceFromPaddle(diff)){
                 ball.bounceVertically();
             }
-            ball.updatePosition(diff);
+            else{
+                ball.updatePosition(diff);
+            }
             draw();
         }
 
@@ -69,11 +73,13 @@ public class GameCanvas extends Canvas {
         public void start() {
             super.start();
             lastUpdate = System.nanoTime();
-            collisionLineList = List.of(
-                    new CollisionLine(0,0,getWidth(),0),
+            collisionlineVertical = List.of(
                     new CollisionLine(getWidth(),0,getWidth(),getHeight()),
-                    new CollisionLine(getWidth(),getHeight(),0,getHeight()),
                     new CollisionLine(0,getHeight(),0,0)
+            );
+            collisionLineHorizontal = List.of(
+                    new CollisionLine(0,0,getWidth(),0),
+                    new CollisionLine(getWidth(),getHeight(),0,getHeight())
             );
         }
     };
