@@ -6,12 +6,21 @@ import javafx.scene.paint.Color;
 
 public class Ball extends GraphicsItem {
     private Point2D moveVector = new Point2D(1, -1).normalize();
-    private double velocity = 100;
+    private double velocity = 500;
 
     public Ball() {
         x = -100;
         y = -100;
         width = height = canvasHeight * .015;
+    }
+
+    public void bounceHorizontally(){
+        moveVector = new Point2D(-moveVector.getX(), moveVector.getY());
+    }
+
+    public void bounceVertically(){
+        moveVector = new Point2D(moveVector.getX(), -moveVector.getY());
+
     }
 
     @Override
@@ -25,8 +34,13 @@ public class Ball extends GraphicsItem {
         this.y = point.getY() - height/2;
     }
 
+    public Point2D newPosition(double diff){
+        return new Point2D(x+moveVector.getX() * velocity * diff,y+moveVector.getY() * velocity * diff);
+    }
+
     public void updatePosition(double diff) {
-        x += moveVector.getX() * velocity * diff;
-        y += moveVector.getY() * velocity * diff;
+        Point2D newPosition = newPosition(diff);
+        x = newPosition.getX();
+        y = newPosition.getY();
     }
 }

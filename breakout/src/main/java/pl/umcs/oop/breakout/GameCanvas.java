@@ -12,12 +12,46 @@ public class GameCanvas extends Canvas {
     private Ball ball;
     private boolean gameRunning = false;
 
+    private boolean shouldBallBounceHorizontally(double diff){
+        Point2D point2D = ball.newPosition(diff);
+        double xDiff = point2D.getX()-ball.x;
+        double yDiff = point2D.getY()-ball.y;
+
+        if(this.widthProperty().get() < ball.x+ball.width || ball.x-ball.width < 0){
+            return true;
+        }
+        return false;
+    }
+    private boolean shouldBallBounceVertically(double diff){
+        if(this.heightProperty().get() < ball.y+ball.height || ball.y-ball.height < 0){
+            return true;
+        }
+        return false;
+    }
+    private boolean shouldBallBounceFromPaddle(double diff){
+        if(Math.abs(paddle.x-ball.x)< paddle.getWidth()/2){
+            if(Math.abs(paddle.y-ball.y)< paddle.getHeight()/2){
+                return true;
+            }
+        }
+        return false;
+    }
+
     private AnimationTimer animationTimer = new AnimationTimer() {
         private long lastUpdate;
         @Override
         public void handle(long now) {
             double diff = (now - lastUpdate)/1_000_000_000.;
             lastUpdate = now;
+            if(shouldBallBounceVertically(diff)){
+                ball.bounceVertically();
+            }
+            else if(shouldBallBounceHorizontally(diff)){
+                ball.bounceHorizontally();
+            }
+            else if(shouldBallBounceFromPaddle(diff)){
+                ball.bounceVertically();
+            }
             ball.updatePosition(diff);
             draw();
         }
